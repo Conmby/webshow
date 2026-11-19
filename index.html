@@ -112,7 +112,7 @@
   }
   .task .desc{
     font-size:21px; font-weight:bold;
-    height:auto; min-height:58px;
+    height:auto; min-height:84px;   /* 三行文字（前往鍵移到票根下方後騰出的高度） */
     word-break:keep-all;             /* 只在空白處換行，不切斷詞 */
     overflow-wrap:anywhere;          /* 遊戲館名過長時仍在框內折行，不撐寬卡片 */
     display:flex; align-items:center; justify-content:center;
@@ -135,7 +135,7 @@
   }
   /* ===== 任務完成：CLEAR! 印章（使用美術素材 任務完成狀態.png） ===== */
   .task .clear-stamp{
-    align-self:stretch; width:100%; min-width:0; max-width:100%; height:52px; margin:0;   /* 與「前往」鍵同一格寬度，CLEAR 出現時不改變任務框 */
+    align-self:stretch; width:100%; min-width:0; max-width:100%; height:40px; margin:0;   /* 與「前往」鍵同一格寬度，CLEAR 出現時不改變任務框 */
     display:flex; align-items:center; justify-content:center;
     pointer-events:none;
   }
@@ -150,15 +150,23 @@
     45%{  opacity:1; }
     100%{ transform:scale(1) rotate(0deg); opacity:1; }
   }
-  .task .gem{
-    width:auto; height:100%; padding:0; min-width:0;
-    position:relative; z-index:1;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  /* ===== 左側票根：上 EXP、下 前往／CLEAR ===== */
+  .task .stub{
+    display:flex; flex-direction:column; min-width:0;
     background:linear-gradient(160deg,#b681e4,#7844ae);
     border-radius:10px 0 0 10px;
     border-right:2px dashed rgba(255,255,255,.8);   /* 撕線 */
+  }
+  .task .stubbtn{ padding:0 7px 9px; }
+  .task .gem{
+    width:auto; flex:1; padding:8px 0; min-width:0;
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:transparent;
+    border-radius:0;
+    border-right:0;
     color:#fff; white-space:nowrap;
-    font-size:32px; font-weight:bold; line-height:1;
+    font-size:30px; font-weight:bold; line-height:1;
     text-shadow:0 2px 3px rgba(0,0,0,.45);
   }
   .task .gem .unit{
@@ -166,14 +174,14 @@
     margin:4px 0 0; opacity:.95; text-shadow:0 1px 2px rgba(0,0,0,.5);
   }
   .task .go{
-    align-self:stretch; width:100%; min-width:0; box-sizing:border-box; height:52px;
+    align-self:stretch; width:100%; min-width:0; box-sizing:border-box; height:40px;
     background:linear-gradient(180deg,#5ecb3a,#1f7d1f);
     border:2px solid #0d4a0d; border-radius:6px;
-    color:#fff; font-size:17px; font-weight:bold; letter-spacing:3px;
-    padding:5px 26px; cursor:pointer;
+    color:#fff; font-size:15px; font-weight:bold; letter-spacing:1px;
+    padding:0 2px; cursor:pointer;
     text-shadow:0 1px 2px #000;
   }
-  .task .go-blank{ height:52px; }   /* 沒有前往鍵時的空位，維持三張卡等高 */
+  .task .go-blank{ height:40px; }   /* 沒有前往鍵時的空位，維持三張卡等高 */
   .task .go:hover{ filter:brightness(1.12); }
   .task .go.claim{ background:linear-gradient(180deg,#ffd84d,#d18d00); border-color:#7a5200; animation:pulse 1s infinite; }
   .task .go.done{ background:#555; border-color:#333; cursor:default; animation:none; }
@@ -1653,14 +1661,14 @@
   }
   .help-x:hover{ color:#ffd76b; transform:scale(1.12); }
   .help-body{
-    flex:1; min-height:0; overflow-y:auto; padding:16px 22px 6px;
+    flex:1; min-height:0; overflow:hidden; padding:14px 22px 6px;   /* 說明頁不捲動：內容固定一頁顯示完 */
     color:#fff; font-size:20px; line-height:1.9; text-align:left;
     text-shadow:0 2px 4px rgba(0,0,0,.85);
   }
   .help-body::-webkit-scrollbar{ width:8px; }
   .help-body::-webkit-scrollbar-thumb{ background:rgba(216,161,60,.5); border-radius:4px; }
   .help-body{ display:flex; flex-direction:column; }   /* 內容短時垂直居中（auto margin 不會裁切） */
-  .help-sec{ display:flex; gap:14px; margin:0 0 22px; }
+  .help-sec{ display:flex; gap:14px; margin:0 0 16px; }
   .help-body>:first-child{ margin-top:auto; }      /* 內容短時垂直居中 */
   .help-body>:last-child{ margin-bottom:auto; }
   .help-sec>b{                         /* ⭐ 段落標題 */
@@ -1677,6 +1685,72 @@
   .help-body .c{ color:#7bf1ff; font-weight:900; }   /* 數字：藍 */
   .help-body .y{ color:#ffd76b; font-weight:900; }   /* 名詞強調：金 */
   .help-body .hnote{ margin-top:16px; font-size:17px; color:#c9c2e6; }
+  /* ===== 說明頁圖解（圖片不壓字：圖只畫示意，文字一律以字串疊在圖上） ===== */
+  .help-fig{
+    position:relative; margin:0 0 10px;
+    border:2px dashed rgba(255,215,107,.55); border-radius:12px;
+    background:rgba(20,16,44,.45); padding:12px 14px 14px;
+  }
+  .help-fig .fig-tag{            /* 原型用的素材標示，實際出圖後整塊換成美術圖 */
+    position:absolute; top:-11px; left:14px; padding:0 8px;
+    background:#241a4d; border-radius:9px;
+    font-size:13px; color:#ffd76b; letter-spacing:1px; text-shadow:none;
+  }
+  .help-flow{ display:flex; align-items:stretch; gap:0; }
+  .help-flow .st{
+    flex:1; min-width:0; text-align:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:6px;
+  }
+  .help-flow .st .ic{
+    width:76px; height:76px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #6a52b8, #2d2060);
+    border:2px solid rgba(255,215,107,.75);
+    display:flex; align-items:center; justify-content:center; font-size:36px;
+  }
+  .help-flow .st .cap{ font-size:17px; line-height:1.35; color:#fff; }
+  .help-flow .ar{                 /* 箭頭：圖的一部分，不含文字 */
+    flex:0 0 26px; display:flex; align-items:center; justify-content:center;
+    margin-top:24px; color:#ffd76b; font-size:24px; font-weight:900;
+  }
+  .help-two{ display:flex; gap:14px; align-items:stretch; }
+  .help-two .col{
+    flex:3; min-width:0; border-radius:10px; padding:10px 14px 12px;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+  }
+  .help-two .col.lux{ flex:5; background:rgba(255,196,80,.12); border-color:rgba(255,215,107,.5); }
+  .help-two .col h4{ margin:0 0 6px; font-size:17px; color:#ffd76b; }
+  .help-two .col ul{ margin:0; padding-left:1.3em; font-size:16px; line-height:1.7; }
+  .help-two .col .items{
+    display:flex; flex-wrap:nowrap; gap:4px; justify-content:space-evenly; padding:2px 0 0;
+  }
+  .help-two .col .items .it{
+    width:86px; flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .help-two .col .items img{
+    width:78px; height:78px; object-fit:contain;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
+  }
+  .help-two .col .items .it span{      /* 圖示下方標示：疊字字串，不壓在圖裡 */
+    font-size:14px; line-height:1.25; text-align:center; color:#fff;
+  }
+
+  /* 圖示＋說明成一組（第 3 頁：每種道具一組，圖示略縮以塞進一頁） */
+  .help-grp{
+    border:1px solid rgba(255,215,107,.22); border-radius:12px;
+    padding:8px 12px 2px; margin:0 0 18px;   /* 兩組之間拉開間距 */
+  }
+  .help-grp .help-fig{ margin:0 0 6px; padding:10px 14px 10px; }
+  .help-grp .help-sec{ margin:0 0 6px; border-top:0; padding-top:0; }
+  .help-grp .help-sec>b{ width:7.2em; font-size:18px; line-height:1.55; }   /* 與說明文字同字級、同行高，首行對齊 */
+  .help-grp .help-sec p{ font-size:18px; line-height:1.55; }
+  .help-grp .help-flow .st .ic{ width:64px; height:64px; font-size:30px; }
+  .help-grp .help-flow .st .cap{ font-size:16px; }
+  .help-grp .help-flow .ar{ margin-top:20px; }
+
+  /* 圖示區與文字說明區之間的分隔：圖只給流程印象，規則一律看下方文字 */
+  .help-fig + .help-sec{
+    border-top:1px solid rgba(255,215,107,.28); padding-top:16px; margin-top:4px;
+  }
   .help-nav{                           /* 左右翻頁金色箭頭 */
     position:absolute; top:50%; transform:translateY(-50%); z-index:3;
     width:40px; height:76px; border:none; background:none; cursor:pointer;
@@ -1909,12 +1983,13 @@
   border:2px solid #ffb400; border-radius:12px;
   padding:10px 12px; display:flex; align-items:center; gap:8px;
   font-size:14px; font-weight:bold; box-shadow:0 4px 14px rgba(0,0,0,.4);">
-  <span style="color:#ffb400;">🕹️ 金手指</span><span style="color:#7fd4ff;font-size:12px;">v.0922</span>
+  <span style="color:#ffb400;">🕹️ 金手指</span><span style="color:#7fd4ff;font-size:12px;">v.1119a</span>
   <button onclick="cheatLevel(-1)" style="width:28px;height:28px;border-radius:6px;border:none;font-weight:bold;cursor:pointer;">−</button>
   <input id="cheatLv" type="number" min="0" max="50" value="0" style="width:52px;height:28px;border-radius:6px;border:none;text-align:center;font-weight:bold;">
   <button onclick="cheatLevel(1)" style="width:28px;height:28px;border-radius:6px;border:none;font-weight:bold;cursor:pointer;">＋</button>
   <button onclick="cheatSet()" style="height:28px;padding:0 10px;border-radius:6px;border:none;background:#ffb400;font-weight:bold;cursor:pointer;">套用</button>
   <button onclick="state.tasks.forEach((t,i)=>{if(t.cur<t.max)progressTask(i)});toast('⏩ 所有任務進度 +1 段')" style="height:28px;padding:0 10px;border-radius:6px;border:none;background:#ffd28a;font-weight:bold;cursor:pointer;">⏩ 推進任務</button>
+  <button id="srvBtn" onclick="SERVER = SERVER==='TW'?'MY':'TW'; this.textContent='🌏 '+(SERVER==='TW'?'台服':'馬來'); state.tasks=rollTasks(); renderTasks(); toast('🌏 已切換為'+(SERVER==='TW'?'台服':'馬來')+'抽選館名單並重抽任務')" style="height:28px;padding:0 10px;border-radius:6px;border:none;background:#9ad8ff;font-weight:bold;cursor:pointer;">🌏 台服</button>
   <button onclick="state.tasks=rollTasks();renderTasks();toast('🎲 已重抽今日任務')" style="height:28px;padding:0 10px;border-radius:6px;border:none;background:#c9b6ff;font-weight:bold;cursor:pointer;">🎲 重抽任務</button>
   <button onclick="sendMail('免費星盤券','免費星盤券 x1','金手指');sendMail('豪華星盤券','豪華星盤券 x1','金手指');toast('🎫 已寄出免費／豪華星盤券各 1 張至信箱')" style="height:28px;padding:0 10px;border-radius:6px;border:none;background:#b9f6a0;font-weight:bold;cursor:pointer;">🎫 發星盤券</button>
   <button onclick="activateOffer();toast(`🎁 已發一張限時優惠券（目前 ${liveOffers().length} 張）`)" style="height:28px;padding:0 10px;border-radius:6px;border:none;background:#ffd76b;font-weight:bold;cursor:pointer;">🎁 發優惠</button>
@@ -1962,9 +2037,16 @@
    右方固定大獎欄 = Lv.10/20/30/40/50 福袋（頁籤切換）
    ========================================================= */
 /* ---------- 任務庫（依 G｜任務庫 規格：12 條、每日各難度抽 1 個） ---------- */
-/* SLOT 押注／SLOT 得分＝抽有該埋點的 70 館；魚機得分＝抽 6 館；大廳銅幣不抽館 */
-const SLOT_HALLS = ["巫毒","爆金龍","財富滿滿","暗黑馬戲團","沙克盃","青蛙大仙","大鬧西遊2","糖果炸彈","天使奧丁","達摩","馬上有錢","麻將自摸","哪吒鬧海","神鬼奧丁","鈔鑽錢","火爆辣椒","血咒德古拉","天才釣手","霸三國 亂世梟雄","奧丁之怒2","霸三國 常山虎將","雷殿","妖界黃昏","狼來了","霸三國 赤焰都督","搖滾木乃伊","麻將高手","血月伯爵","東海龍王","梅杜莎 蛇髮美人","豬寶商","霸三國 方天戰神","紅鬍子傳奇","貓咪大贏家","彩虹寶庫","神將三太子","甘貝熊奇幻菓鋪","百變財神","轟炸狂歡","彩蛋嘉年華","波賽頓之戟","瘋狂法蘭克","冰雪女王","太陽樂章","眾神之王","聖誕精靈夜","忍術秘卷","足球之星","蓋世熊貓","貓財神","西部追緝令","女王克麗奧","酉閃町SLOT","狂歡企鵝","海灘派對","大鬧西遊","仲夏浪漫夜","神箭羅賓漢","深海尋寶","森林之子","勇闖幽靈屋","蒸氣帝國","甘貝熊王國","祥瑞四聖","俠盜崛起","活力農場","瘋狂農場","鬥陣捕魚季","閃電嘎嘎","馬雅謎城"];
-const FISH_HALLS = ["萊格冒險","大運西遊","鯊很大4","金大尾","鯊很大2","鯊很大1","末日行動"];
+/* 任務抽選館名單（2026-11-10）：台服與馬來各一份，馬來的 45 館全部包含在台服 53 館內 */
+const SLOT_HALLS_TW = ["搖滾木乃伊","麻將高手","血月伯爵","東海龍王","霸三國 方天戰神","紅鬍子傳奇","貓咪大贏家","彩虹寶庫","神將三太子","甘貝熊奇幻菓鋪","百變財神","轟炸狂歡","彩蛋嘉年華","波賽頓之戟","瘋狂法蘭克","冰雪女王","太陽樂章","眾神之王","聖誕精靈夜","忍術秘卷","足球之星","蓋世熊貓","貓財神","西部追緝令","女王克麗奧","酉閃町SLOT","狂歡企鵝","海灘派對","大鬧西遊","仲夏浪漫夜","神箭羅賓漢","霸三國 赤焰都督","狼來了","雷殿","霸三國 常山虎將","奧丁之怒2","霸三國 亂世梟雄","天才釣手","血咒德古拉","火爆辣椒","鈔鑽錢","神鬼奧丁","哪吒鬧海","馬上有錢","達摩","糖果炸彈","大鬧西遊2","沙克盃","暗黑馬戲團","梅杜莎 蛇髮美人","豬寶商","巫毒","爆金龍"];
+const SLOT_HALLS_MY = ["梅杜莎 蛇髮美人","足球之星","仲夏浪漫夜","酉閃町SLOT","狂歡企鵝","海灘派對","女王克麗奧","血月伯爵","西部追緝令","蓋世熊貓","太陽樂章","冰雪女王","貓財神","聖誕精靈夜","眾神之王","忍術秘卷","瘋狂法蘭克","東海龍王","神將三太子","彩虹寶庫","轟炸狂歡","彩蛋嘉年華","甘貝熊奇幻菓鋪","紅鬍子傳奇","百變財神","豬寶商","貓咪大贏家","鈔鑽錢","麻將高手","火爆辣椒","雷殿","天才釣手","搖滾木乃伊","血咒德古拉","狼來了","奧丁之怒2","沙克盃","霸三國 方天戰神","波賽頓之戟","神箭羅賓漢","大鬧西遊","霸三國 亂世梟雄","霸三國 常山虎將","巫毒","爆金龍"];
+const FISH_HALLS_TW = ["鯊很大","鯊很大2","鯊很大4","大運西遊","萊格冒險","金大尾"];
+const FISH_HALLS_MY = ["鯊很大","鯊很大2","鯊很大4","金大尾"];   /* 199 大運西遊是否開放馬來待確認 */
+/* 未上線（暫不列入）：SLOT 234 財富滿滿、魚機 301 末日行動，上線後併入上列名單 */
+/* 魚機名單只用於「前往」隨機轉跳；魚機任務條件為整個魚機類別，不指定單一館 */
+let SERVER = "TW";   /* 金手指可切換，影響抽館名單 */
+const SLOT_HALLS = () => SERVER === "TW" ? SLOT_HALLS_TW : SLOT_HALLS_MY;
+const FISH_HALLS = () => SERVER === "TW" ? FISH_HALLS_TW : FISH_HALLS_MY;
 const TASK_POOL = [
   { diff:"簡", kind:"slot-bet",  text:"於 {0}<br>押注 20 次",        max:20,  exp:200 },
   { diff:"中", kind:"slot-bet",  text:"於 {0}<br>押注 50 次",        max:50,  exp:300 },
@@ -1972,19 +2054,20 @@ const TASK_POOL = [
   { diff:"簡", kind:"slot-win",  text:"於 {0}<br>單局得分至少 10 倍", max:1,   exp:200 },
   { diff:"中", kind:"slot-win",  text:"於 {0}<br>單局得分至少 20 倍", max:1,   exp:300 },
   { diff:"難", kind:"slot-win",  text:"於 {0}<br>單局得分至少 30 倍", max:1,   exp:500 },
-  { diff:"簡", kind:"fish",      text:"於 {0}<br>單局得分至少 20 倍", max:1,   exp:200 },
-  { diff:"中", kind:"fish",      text:"於 {0}<br>單局得分至少 50 倍", max:1,   exp:300 },
-  { diff:"難", kind:"fish",      text:"於 {0}<br>單局得分至少 100 倍",max:1,   exp:500 },
-  { diff:"簡", kind:"lobby",     text:"領取大廳銅幣 2 次",            max:2,   exp:200 },
-  { diff:"中", kind:"lobby",     text:"領取大廳銅幣 3 次",            max:3,   exp:300 },
-  { diff:"難", kind:"lobby",     text:"領取大廳銅幣 4 次",            max:4,   exp:500 },
+  { diff:"簡", kind:"fish",      text:"於魚機區<br>單局至少得分 20 倍", max:1,   exp:200 },
+  { diff:"中", kind:"fish",      text:"於魚機區<br>單局至少得分 50 倍", max:1,   exp:300 },
+  { diff:"難", kind:"fish",      text:"於魚機區<br>單局至少得分 100 倍",max:1,   exp:500 },
+  { diff:"簡", kind:"spin",      text:"完成轉轉好運來",      max:1,   exp:200 },
+  { diff:"簡", kind:"lobby",     text:"在大廳領取 2 次銅幣",            max:2,   exp:200 },
+  { diff:"中", kind:"lobby",     text:"在大廳領取 3 次銅幣",            max:3,   exp:300 },
+  { diff:"難", kind:"lobby",     text:"在大廳領取 4 次銅幣",            max:4,   exp:500 },
 ];
 const pick = a => a[Math.floor(Math.random() * a.length)];
 /* 抽出當日 3 個任務：簡／中／難各 1；抽到 SLOT 或魚機再各自抽 1 個已埋點的遊戲館 */
 function rollTasks(){
   return ["簡","中","難"].map(d => {
     const t = pick(TASK_POOL.filter(x => x.diff === d));
-    const hall = t.kind === "lobby" ? "" : pick(t.kind === "fish" ? FISH_HALLS : SLOT_HALLS);
+    const hall = (t.kind === "slot-bet" || t.kind === "slot-win") ? pick(SLOT_HALLS()) : (t.kind === "spin" ? "轉轉好運來" : "");  /* SLOT 抽館；轉轉好運來為固定館；魚機與大廳銅幣不指定 */
     return { desc:t.text.replace("{0}", hall), cur:0, max:t.max, exp:t.exp,
              claimed:false, justCleared:false, diff:t.diff, kind:t.kind, hall };
   });
@@ -2021,12 +2104,13 @@ function renderTasks(){
       ? `<div class="clear-stamp ${t.justCleared ? "pop" : ""}" title="任務已完成">
            <img src="${ART_CLEAR}" alt="CLEAR!">
          </div>`
-      : t.kind === "lobby"
-        ? `<div class="go-blank"></div>`        /* 大廳銅幣任務沒有指定遊戲館，不顯示前往鍵（留空位保持三張卡一致） */
-        : `<button class="go" onclick="goTask(${i})">前往</button>`;
+      : `<button class="go" onclick="goTask(${i})">前往</button>`;   /* 大廳銅幣任務也有前往鍵：按下關閉通行證視窗、回到大廳 */
     return `
       <div class="task">
-        <div class="gem">${t.exp}<span class="unit">EXP</span></div>
+        <div class="stub">
+          <div class="gem">${t.exp}<span class="unit">EXP</span></div>
+          <div class="stubbtn">${btn}</div>
+        </div>
         <div class="task-main">
           <div class="desc">${t.desc}</div>
           <div class="bar-row">
@@ -2035,22 +2119,22 @@ function renderTasks(){
               <div class="txt">${t.cur}/${t.max}</div>
             </div>
           </div>
-          ${btn}
         </div>
       </div>`;
   }).join("");
   /* 蓋印章動畫只播一次 */
   state.tasks.forEach(t => { t.justCleared = false; });
 }
-/* 任務「前往」：直接轉跳到該任務的指定遊戲館
+/* 任務「前往」：轉跳到該任務的目的地
    ─ SLOT 任務：跳到任務上寫的那一館
    ─ 魚機任務：隨機跳進一間魚機遊戲館
-   ─ 大廳銅幣任務：沒有指定遊戲館，不顯示前往鍵
-   原型沒有真的遊戲，因此以「遊戲館畫面」示意，館內可模擬遊玩推進進度 */
+   ─ 大廳遊戲：跳到指定的大廳遊戲（轉轉好運來）
+   ─ 大廳銅幣任務：關閉通行證視窗、回到大廳領銅幣
+   原型沒有真的遊戲，因此以示意畫面代替，畫面內可模擬遊玩推進進度 */
 function goTask(i){
   const t = state.tasks[i];
   if(!t || t.cur >= t.max) return;
-  const hall = t.kind === "fish" ? pick(FISH_HALLS) : t.hall;
+  const hall = t.kind === "fish" ? pick(FISH_HALLS()) : (t.kind === "lobby" ? "大廳" : t.hall);
   renderHall(i, hall);
 }
 function renderHall(i, hall){
@@ -2059,9 +2143,9 @@ function renderHall(i, hall){
   const done = t.cur >= t.max;
   modal(`
     <div class="hall-sim">
-      <div class="hall-top">${t.kind === "fish" ? "🐟 魚機區" : "🎰 SLOT 區"}</div>
+      <div class="hall-top">${t.kind === "fish" ? "🐟 魚機區" : t.kind === "spin" ? "🎡 大廳遊戲" : t.kind === "lobby" ? "🏠 大廳" : "🎰 SLOT 區"}</div>
       <div class="hall-name">${hall}</div>
-      <div class="hall-note">原型示意畫面：實際遊戲會直接開啟此遊戲館</div>
+      <div class="hall-note">${t.kind === "lobby" ? "原型示意畫面：實際遊戲會<b>關閉通行證視窗</b>，回到大廳領銅幣" : "原型示意畫面：實際遊戲會直接開啟此遊戲館"}</div>
       <div class="hall-task">
         <div class="hall-task-t">進行中的任務</div>
         <div class="hall-task-d">${t.desc.replace(/<br>/g, " ")}</div>
@@ -2069,7 +2153,7 @@ function renderHall(i, hall){
       </div>
       <div class="hall-btns">
         ${done ? `<button class="hall-go" onclick="closeModal()">任務已完成，返回通行證</button>`
-               : `<button class="hall-go" onclick="hallPlay(${i},'${hall}')">模擬遊玩一次</button>
+               : `<button class="hall-go" onclick="hallPlay(${i},'${hall}')">${t.kind === "lobby" ? "模擬領取一次銅幣" : "模擬遊玩一次"}</button>
                   <button class="hall-back" onclick="closeModal()">返回通行證</button>`}
       </div>
     </div>`);
@@ -3357,21 +3441,87 @@ function cheatSet(){
 
 /* ---------- 資訊 / 關閉 ---------- */
 /* ---------- 活動說明（兩頁，左右箭頭／圓點翻頁） ---------- */
+/* 說明頁改為三頁圖解版。
+   原則：美術圖「不壓字」——圖只畫人物／道具／箭頭等示意，
+   所有文字（含流程圖每一格的標籤）一律由程式以字串疊在圖上，
+   各語系只換字串、不重出圖，數值調整也不用重畫。
+   下方虛線框是原型的佔位示意，實際出圖後整塊換成美術圖、文字層位置不變。 */
+/* 說明頁三頁圖解版（圖示區與文字說明區分開）。
+   原則：
+   ─ 美術圖「不壓字」：圖只畫人物／道具／箭頭，文字一律由程式疊上去
+   ─ 圖示只標「步驟名稱」，看圖知道流程；完整規則一律寫在下方「文字說明」區
+     （只看圖示會看不懂，所以兩邊都要有） */
 const HELP_PAGES = [
-`<div class="help-sec"><b>活動期間</b><div>
+/* 第 1 頁：升級流程圖 ＋ 玩法說明 */
+`<div class="help-fig"><span class="fig-tag">圖 1　升級流程（四格，不含文字）</span>
+  <div class="help-flow">
+    <div class="st"><div class="ic">📋</div><div class="cap">完成每日任務</div></div>
+    <div class="ar">▶</div>
+    <div class="st"><div class="ic">⭐</div><div class="cap">獲得經驗值</div></div>
+    <div class="ar">▶</div>
+    <div class="st"><div class="ic">🏅</div><div class="cap">提升等級</div></div>
+    <div class="ar">▶</div>
+    <div class="st"><div class="ic">🎁</div><div class="cap">領取獎勵</div></div>
+  </div></div>
+<div class="help-sec"><b>活動期間</b><div>
   <p>自開始遊玩起算 <span class="g">30</span> 天。</p></div></div>
 <div class="help-sec"><b>玩法說明</b><div><ol>
   <li>每日完成任務可獲得經驗值，每累積 <span class="p">200</span> 點升 <span class="p">1</span> 級，最高 <span class="p">50</span> 等。</li>
   <li>每日 <span class="c">00:00</span> 刷新 <span class="g">3</span> 個任務，未完成的任務不保留。</li>
+  <li>達成等級即可領取該階獎勵，獎勵以<span class="y">信件</span>方式發送。</li>
   <li>活動結束時<span class="y">未領取的獎勵將會消失</span>，請及時領取。</li>
 </ol></div></div>`,
-`<div class="help-sec"><b>解鎖獎勵</b><div><ol>
-  <li>購買<span class="y">豪華通行證</span>可解鎖豪華軌獎勵，購買後立即生效，已達成等級即可領取</li>
-  <li>豪華通行證另享有「專屬獎勵」、「限時優惠」與<span class="y">豪華星盤</span>抽取幸運大獎</li>
-  <li><span class="y">限時優惠券</span>取得後 <span class="g">30</span> 分鐘內可至商城選購加成禮包，一張限購一次，逾期即失效。</li>
-  <li><span class="y">星盤抽獎券</span>取得後會寄至<span class="y">信箱</span>，於信箱點「領取」即開啟星盤抽獎，獎勵直接寄至信箱。</li>
+/* 第 2 頁：免費軌／豪華軌對比圖 ＋ 解鎖說明 */
+`<div class="help-fig"><span class="fig-tag">圖 2　免費軌／豪華軌對比（道具圖示，不含文字）</span>
+  <div class="help-two">
+    <div class="col"><h4>免費通行證</h4>
+      <div class="items">
+        <div class="it"><img src="${ICON["星幣"]}" alt=""><span>星幣</span></div>
+        <div class="it"><img src="${ICON["銅幣"]}" alt=""><span>銅幣</span></div>
+        <div class="it"><img src="${ICON["免費星盤券"]}" alt=""><span>免費星盤券</span></div>
+      </div></div>
+    <div class="col lux"><h4>豪華通行證</h4>
+      <div class="items">
+        <div class="it"><img src="${ICON["星幣"]}" alt=""><span>星幣</span></div>
+        <div class="it"><img src="${ICON["銅幣"]}" alt=""><span>銅幣</span></div>
+        <div class="it"><img src="${ICON["豪華星盤券"]}" alt=""><span>豪華星盤券</span></div>
+        <div class="it"><img src="${ICON["限時優惠券"]}" alt=""><span>限時優惠券</span></div>
+        <div class="it"><img src="${ICON["判金添富卡"]}" alt=""><span>狀態卡</span></div>
+      </div></div>
+  </div></div>
+<div class="help-sec"><b>解鎖獎勵</b><div><ol>
+  <li>購買<span class="y">豪華通行證</span>可解鎖豪華軌獎勵，購買後立即生效，已達成等級即可領取。</li>
+  <li>豪華通行證另享有「專屬獎勵」、「限時優惠」與<span class="y">豪華星盤</span>抽取幸運大獎。</li>
 </ol>
-<p class="hnote">＊免費通行證獎勵無需解鎖即可領取。<br>＊獎勵將會以信件方式發送。</p></div></div>`
+<p class="hnote">＊免費通行證獎勵無需解鎖即可領取。</p></div></div>`,
+/* 第 3 頁：兩種券各自「圖示＋說明」成一組 */
+`<div class="help-grp">
+  <div class="help-fig"><span class="fig-tag">圖 3　星盤抽獎券流程（四格，不含文字）</span>
+    <div class="help-flow">
+      <div class="st"><div class="ic">🎫</div><div class="cap">取得星盤券</div></div>
+      <div class="ar">▶</div>
+      <div class="st"><div class="ic">✉️</div><div class="cap">寄送至信箱</div></div>
+      <div class="ar">▶</div>
+      <div class="st"><div class="ic">🌌</div><div class="cap">開啟抽獎</div></div>
+      <div class="ar">▶</div>
+      <div class="st"><div class="ic">📬</div><div class="cap">獎勵寄回信箱</div></div>
+    </div></div>
+  <div class="help-sec"><b>星盤抽獎券</b><div>
+    <p>取得後會寄送至信箱（一封信一張），於信箱點「領取」即開啟抽獎，獎勵直接寄至信箱。</p></div></div>
+</div>
+<div class="help-grp">
+  <div class="help-fig"><span class="fig-tag">圖 4　限時優惠券流程（三格，不含文字）</span>
+    <div class="help-flow">
+      <div class="st"><div class="ic">🎁</div><div class="cap">取得限時優惠券</div></div>
+      <div class="ar">▶</div>
+      <div class="st"><div class="ic">🛒</div><div class="cap">至商城選購</div></div>
+      <div class="ar">▶</div>
+      <div class="st"><div class="ic">⏳</div><div class="cap">逾時失效</div></div>
+    </div></div>
+  <div class="help-sec"><b>限時優惠券</b><div>
+    <p>取得後 <span class="g">30</span> 分鐘內可至商城選購加成禮包（離線也繼續倒數），一張限購一次，逾期即失效。</p></div></div>
+</div>
+<p class="hnote">＊獎勵將會以信件方式發送。</p>`
 ];
 let _help = 0;
 function openInfo(){ _help = 0; renderHelp(); document.getElementById("help").classList.add("show"); }
